@@ -1,12 +1,8 @@
-# Screenshot Guide
+# Published Evidence
 
-Recommended sanitized evidence:
-1. EventCode baseline
-2. Event ID 4688 process baseline
-3. Writable-directory hunt
-4. `cleanmgr.exe → DismHost.exe` investigation
-5. `CyberBoss-Test.exe` Event 4688 validation
-6. Final three-panel dashboard
-7. Cleanup confirmation (`Test-Path` = `False`)
+The repository currently includes two screenshots from the completed validation:
 
-Before publishing, review screenshots for credentials, tokens, personal data, unrelated browser content, or anything else that should not be public.
+1. [Final three-panel Windows Process Security Monitoring dashboard](06-final-dashboard.png)
+2. [Controlled test-file cleanup confirmation](07-cleanup-confirmation.png)
+
+These images support the dashboard and cleanup claims documented in the main project README. They should be reviewed again before reuse outside this repository to ensure no unrelated or sensitive information is exposed.
