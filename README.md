@@ -3,6 +3,12 @@
 ## Overview
 Built and validated a Windows process-monitoring workflow in Splunk using Windows Security Event ID 4688. The project covered process baselining, parent-child analysis, writable-directory hunting, contextual false-positive tuning, dashboard development, and controlled end-to-end validation.
 
+## Evidence and Project Files
+- [Detection and dashboard SPL](spl/)
+- [Investigation notes](docs/investigation-notes.md)
+- [Dashboard panel documentation](docs/dashboard-panels.md)
+- [Published screenshots](screenshots/)
+
 ## SOC Workflow
 **Collect → Search → Baseline → Filter → Investigate → Detect → Tune → Validate → Report → Dashboard → Document**
 
@@ -62,12 +68,17 @@ A temporary `DismHost.exe` instance launched by `cleanmgr.exe` was investigated.
 Microsoft Edge update activity from a temporary directory was also investigated. Parent, command-line, account, and timeline context supported a **likely benign / expected update** assessment. Signature verification could not be completed because the temporary file had already disappeared, so that limitation was documented rather than overstated.
 
 ## Dashboard
-The **Windows Process Security Monitoring** dashboard contained:
-1. **Processes Executed from Writable Directories**
-2. **Top Processes Executed from Writable Directories**
-3. **Top Parent Processes**
+The **Windows Process Security Monitoring** dashboard contained three evidence-linked panels:
 
-Full paths were retained for investigation while executable names were normalized for visualization.
+| Panel | Analyst purpose | Query |
+|---|---|---|
+| Processes Executed from Writable Directories | Detailed triage using time, account, parent, child path, and command line | [View SPL](spl/writable-directory-detection.spl) |
+| Top Processes Executed from Writable Directories | Normalize executable names and summarize frequency | [View SPL](spl/top-processes.spl) |
+| Top Parent Processes | Identify the parent processes launching activity from writable locations | [View SPL](spl/top-parent-processes.spl) |
+
+Full paths were retained for investigation while executable names were normalized for visualization. See the [dashboard panel documentation](docs/dashboard-panels.md) for the tuning and validation rationale.
+
+![Windows Process Security Monitoring dashboard](screenshots/06-final-dashboard.png)
 
 ## End-to-End Validation
 A controlled test copied `whoami.exe` to:
@@ -85,6 +96,8 @@ Splunk confirmed Event ID 4688 with the expected account, parent, child path, an
 
 After validation, the test file was removed and `Test-Path` returned `False`.
 
+![Controlled test-file cleanup confirmation](screenshots/07-cleanup-confirmation.png)
+
 ## Key Findings
 - Frequency does not equal maliciousness.
 - A detection match is not a verdict.
@@ -98,4 +111,4 @@ After validation, the test file was removed and `Test-Path` returned `False`.
 Splunk SPL, Windows Event ID 4688 analysis, process hunting, parent-child analysis, SOC triage, detection development, false-positive tuning, timeline analysis, dashboards, evidence-based classification, and controlled validation.
 
 ## Limitations
-This was a controlled training environment using Splunk Free, not a production SOC. Production alerting and role-management capabilities were outside the scope of this project.
+This was a controlled training environment using Splunk Free, not a production SOC. Production alerting and role-management capabilities were outside the scope of this project. The dashboard's three panel searches are preserved as separate SPL files; a Splunk dashboard XML export is not included.
