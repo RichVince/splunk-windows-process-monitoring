@@ -1,0 +1,13 @@
+index=windows EventCode=4688
+| where (
+    like(New_Process_Name,"%\\Users\\%")
+    OR like(New_Process_Name,"%\\Temp\\%")
+    OR like(New_Process_Name,"%\\AppData\\%")
+)
+AND NOT (
+    Creator_Process_Name="C:\\Windows\\System32\\cleanmgr.exe"
+    AND like(New_Process_Name,"%\\AppData\\Local\\Temp\\%\\DismHost.exe")
+)
+| eval Process_Name=mvindex(split(New_Process_Name,"\\"),-1)
+| stats count by Process_Name
+| sort - count

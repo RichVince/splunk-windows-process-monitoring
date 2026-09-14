@@ -1,0 +1,12 @@
+index=windows EventCode=4688
+| where (
+    like(New_Process_Name,"%\\Users\\%")
+    OR like(New_Process_Name,"%\\Temp\\%")
+    OR like(New_Process_Name,"%\\AppData\\%")
+)
+AND NOT (
+    Creator_Process_Name="C:\\Windows\\System32\\cleanmgr.exe"
+    AND like(New_Process_Name,"%\\AppData\\Local\\Temp\\%\\DismHost.exe")
+)
+| table _time Account_Name Creator_Process_Name New_Process_Name Process_Command_Line
+| sort - _time
